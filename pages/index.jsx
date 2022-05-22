@@ -1,28 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 function Header({ title }) {
   return <h1>{title ? title : 'Default title'}</h1>;
 }
 
 export default function HomePage() {
-  const names = ['Ada Lovelace', 'Grace Hopper', 'Margaret Hamilton'];
+  const [frame, setFrame] = useState(0);
+  const [frameRate, setFrameRate] = useState(2);
 
-  const [likes, setLikes] = useState(0);
+  useEffect(() => {
+    setInterval(() => {
+      setFrame(prev => prev + 1);
+    }, GetIntervalMillis(frameRate));
+  }, []);
 
-  function handleClick() {
-    setLikes(likes + 1);
+  function onFramerateChange(event){
+    setFrameRate(event.target.value);
   }
 
   return (
     <div>
-      <Header title="Develop. Preview. Ship. 🚀" />
-      <ul>
-        {names.map((name) => (
-          <li key={name}>{name}</li>
-        ))}
-      </ul>
+      <Header title="Radar Monitor" />
 
-      <button onClick={handleClick}>Like ({likes})</button>
+      <div>
+        <label>Frame Rate
+          <input value={frameRate} onChange={onFramerateChange} type="number"/>
+        </label>
+      </div>
+      <div><p>Current Frame Rate: {frameRate}</p></div>
+      <div><p>{frame}</p></div>
     </div>
   );
+}
+
+function GetIntervalMillis(frameRate) {
+  console.log((1/frameRate) * 1000);
+  return (1/frameRate) * 1000;
 }
 
